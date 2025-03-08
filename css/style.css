@@ -81,6 +81,7 @@ body {
   font-weight: bold;
   font-size: 16px;
   letter-spacing: 1.2px;
+  transition: all 0.3s;
 }
 .list a:hover {
   font-weight: bold;
@@ -103,12 +104,19 @@ body {
 .post {
   display: none;
 }
+.post .post-title {
+  font-size: 25px;
+  font-weight: bold;
+  letter-spacing: 1px;
+  text-align: center;
+}
 .post.active {
   display: block;
 }
 
 .post-author {
   font-style: italic;
+  font-weight: bold;
 }
 
 .post-tags {

@@ -93,11 +93,12 @@ body {
 	padding: 0;
 	text-align: center;
 	a {
-		text-decoration: none; ////////////transition
+		text-decoration: none;
 		color: rgb(15, 173, 212);
 		font-weight: bold;
 		font-size: 16px;
 		letter-spacing: 1.2px;
+		transition: all 0.3s;
 	}
 	a:hover {
 		font-weight: bold;
@@ -126,6 +127,12 @@ body {
 
 .post {
 	display: none;
+	.post-title {
+		font-size: 25px;
+		font-weight: bold;
+		letter-spacing: 1px;
+		text-align: center;
+	}
 	&.active {
 		display: block;
 	}
@@ -133,6 +140,7 @@ body {
 
 .post-author {
 	font-style: italic;
+	font-weight: bold;
 }
 
 .post-tags {
