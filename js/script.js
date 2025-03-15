@@ -127,10 +127,14 @@ const generateAuthor = () => {
   const articleAll = document.querySelectorAll('.post');
   articleAll.forEach((el) => {
     const authorName = el.getAttribute('data-author');
+    const postAuthor = el.querySelector('.post-author');
     if (!allAuthors[authorName]) {
       allAuthors[authorName] = 1;
     } else {
       allAuthors[authorName]++;
+    }
+    if (postAuthor) {
+      postAuthor.innerHTML = `<a href="#author-${authorName}">${authorName}</a>`;
     }
   });
   const listAuthors = document.querySelector('.sidebar .authors');
