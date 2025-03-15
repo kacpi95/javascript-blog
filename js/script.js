@@ -1,5 +1,8 @@
 'use strict';
 
+const optCloudClassCount = 5;
+const optCloudClassPrefix = 'tag-size-';
+
 const titleClickHandler = function (event) {
   event.preventDefault();
   const clickedElement = this;
@@ -45,19 +48,50 @@ function generateTitleLinks(customSelector = '') {
     link.addEventListener('click', titleClickHandler);
   }
 }
+function calculateTagsParams(tags) {
+  const params = { max: 0, min: 9999 };
+  for (let tag in tags) {
+    params.max = Math.max(tags[tag], params.max);
+    params.min = Math.min(tags[tag], params.min);
+  }
+  return params;
+}
+function calculateTagClass(count, params) {
+  const normalizedCount = count - params.min;
+  const normalizedMax = params.max - params.min;
+  const percentage = normalizedCount / normalizedMax;
+  const classNumber = Math.floor(percentage * (optCloudClassCount - 1) + 1);
+  return optCloudClassPrefix + classNumber;
+}
 function generateTags() {
+  let allTags = {};
   const articleAll = document.querySelectorAll('.post');
   for (const article of articleAll) {
     const articleBoxDataTags = article.getAttribute('data-tags');
     const arrayArticle = articleBoxDataTags.split(' ');
     const articleTagsSelector = article.querySelector('.post-tags .list');
+    const tagsParams = calculateTagsParams(allTags);
+    console.log('tagsParams:', tagsParams);
     let tagsHtml = '';
 
-    arrayArticle.forEach((article) => {
-      tagsHtml += `<li><a href="#tag-${article}">${article}</a></li>`;
+    arrayArticle.forEach((tag) => {
+      tagsHtml += `<li><a href="#tag-${tag}">${tag}</a></li>`;
+      if (!allTags[tag]) {
+        allTags[tag] = 1;
+      } else {
+        allTags[tag]++;
+      }
     });
     articleTagsSelector.insertAdjacentHTML('beforeend', tagsHtml);
   }
+  const tagsParams = calculateTagsParams(allTags);
+  const tagList = document.querySelector('.sidebar .tags');
+  let htmlTagsRight = '';
+  for (let tag in allTags) {
+    const tagClass = calculateTagClass(allTags[tag], tagsParams);
+    htmlTagsRight += `<li><a href="#tag-${tag}" class="${tagClass}">${tag} (${allTags[tag]})</a></li>`;
+  }
+  tagList.insertAdjacentHTML('beforeend', htmlTagsRight);
 }
 function tagClickHandler(event) {
   /* prevent default action for this event */
@@ -89,13 +123,22 @@ function tagClickHandler(event) {
   generateTitleLinks(`[data-tags~="${tag}"]`);
 }
 const generateAuthor = () => {
+  const allAuthors = {};
   const articleAll = document.querySelectorAll('.post');
   articleAll.forEach((el) => {
-    const postAuthor = el.querySelector('.post-author');
     const authorName = el.getAttribute('data-author');
-    let authorHtml = `<a href="#author-${authorName}">${authorName}</a>`;
-    postAuthor.innerHTML = authorHtml;
+    if (!allAuthors[authorName]) {
+      allAuthors[authorName] = 1;
+    } else {
+      allAuthors[authorName]++;
+    }
   });
+  const listAuthors = document.querySelector('.sidebar .authors');
+  let authorHtml = '';
+  for (let author in allAuthors) {
+    authorHtml += `<li><a href="#author-${author}">${author} (${allAuthors[author]})</a></li>`;
+  }
+  listAuthors.insertAdjacentHTML('beforeend', authorHtml);
 };
 
 function addClickListenersToTags() {
