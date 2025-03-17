@@ -78,14 +78,12 @@ function calculateTagClass(count, params) {
   return optCloudClassPrefix + classNumber;
 }
 function generateTags() {
-  let allTags = { tags: [] };
+  let allTags = {};
   const articleAll = document.querySelectorAll('.post');
   for (const article of articleAll) {
     const articleBoxDataTags = article.getAttribute('data-tags');
     const arrayArticle = articleBoxDataTags.split(' ');
     const articleTagsSelector = article.querySelector('.post-tags .list');
-    const tagsParams = calculateTagsParams(allTags);
-    console.log('tagsParams:', tagsParams);
     let tagsHtml = '';
 
     arrayArticle.forEach((tag) => {
@@ -101,13 +99,18 @@ function generateTags() {
     articleTagsSelector.insertAdjacentHTML('beforeend', tagsHtml);
   }
   const tagsParams = calculateTagsParams(allTags);
+  let tagListData = { tags: [] };
   for (let tag in allTags) {
     const tagClass = calculateTagClass(allTags[tag], tagsParams);
-    allTags.tags.push({ id: tag, count: allTags[tag], className: tagClass });
+    tagListData.tags.push({
+      id: tag,
+      count: allTags[tag],
+      className: tagClass,
+    });
     console.log(allTags);
   }
   const tagList = document.querySelector('.sidebar .tags');
-  tagList.innerHTML = templates.tagCloudLink(allTags);
+  tagList.innerHTML = templates.tagCloudLink(tagListData);
 }
 function tagClickHandler(event) {
   /* prevent default action for this event */
